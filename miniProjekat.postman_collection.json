@@ -1,0 +1,206 @@
+{
+	"info": {
+		"_postman_id": "1507c675-1363-4d7e-ba88-863c0907f11e",
+		"name": "miniProjekat",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33315337",
+		"_collection_link": "https://lunar-station-324235.postman.co/workspace/My-Workspace~301f4428-8ffe-4418-887c-53f0ab6913d5/collection/33315337-1507c675-1363-4d7e-ba88-863c0907f11e?action=share&source=collection_link&creator=33315337"
+	},
+	"item": [
+		{
+			"name": "Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"pm.environment.set(\"bearer\",jsonData.access_token);\r",
+							"console.log(jsonData.access_token);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"console.clear();"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "matijal",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "m",
+							"type": "text"
+						},
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "idms",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/auth/realms/idms/protocol/openid-connect/token",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"auth",
+						"realms",
+						"idms",
+						"protocol",
+						"openid-connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "pageSize",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Status kod je 200', function () {",
+							"    pm.response.to.have.status(200);",
+							"})",
+							"",
+							"pm.test('Response vreme je manje od 500 ms', function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);",
+							"})",
+							"",
+							"var statusCode = pm.response.code;",
+							"",
+							"console.log('Status kod je ' + statusCode)",
+							"",
+							"console.log('Response vreme je ' + pm.response.responseTime)",
+							"",
+							"var jsonData = pm.response.json();",
+							"",
+							"var pageSizeDigit = pm.environment.get(\"pageSize\");",
+							"pm.test(\"Rows array ima \" + pageSizeDigit + \" elementa\", function (){",
+							"    pm.expect(jsonData.rows).to.be.an(\"array\").and.to.have.length(pageSizeDigit);",
+							"});",
+							"console.log(pageSizeDigit);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"console.clear();\r",
+							"pm.environment.set(\"pageSize\", 4);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{bearer}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"entityName\": \"application\",\r\n  \"parameters\": [],\r\n  \"sortingFields\": [\r\n    {\r\n      \"name\": \"dateOfEnrolment\",\r\n      \"sortingOrder\": \"DESC\"\r\n    }\r\n  ],\r\n  \"pagination\": {\r\n    \"pageSize\": {{pageSize}},\r\n    \"pageIndex\": 0\r\n  }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/composition/api/v1/search/performSearch",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"composition",
+						"api",
+						"v1",
+						"search",
+						"performSearch"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "https://idms.test.senegal.netsetglobal.rs",
+			"type": "string"
+		},
+		{
+			"key": "pageSize",
+			"value": "10"
+		},
+		{
+			"key": "acces_token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
