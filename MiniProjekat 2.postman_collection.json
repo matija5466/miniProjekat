@@ -1,0 +1,112 @@
+{
+	"info": {
+		"_postman_id": "1169e919-5999-4647-8e19-2b5a33c9c730",
+		"name": "MiniProjekat 2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33315337",
+		"_collection_link": "https://lunar-station-324235.postman.co/workspace/My-Workspace~301f4428-8ffe-4418-887c-53f0ab6913d5/collection/33315337-1169e919-5999-4647-8e19-2b5a33c9c730?action=share&source=collection_link&creator=33315337"
+	},
+	"item": [
+		{
+			"name": "token",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"console.clear();\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.environment.set(\"bearer\",jsonData.access_token);",
+							"let statesArray = [];",
+							"let applicationState = \"\";",
+							"let applicationStates = pm.environment.get(\"applicationStates\");",
+							"console.log(\"Script started.\");",
+							"if (applicationStates) {",
+							"    statesArray = JSON.parse(applicationStates);",
+							"}",
+							"console.log(\"Number of elements in statesArray:\", statesArray.length);",
+							"",
+							"",
+							"if(statesArray.length > 0) {",
+							"    console.log(\"Loop is continuing.\");",
+							"    let state = statesArray.pop();",
+							"    pm.environment.set(\"applicationState\",state);",
+							"    pm.environment.set(\"applicationStates\",JSON.stringify(statesArray));",
+							"} else {",
+							"    console.log(\"Loop is ending.\");",
+							"    postman.setNextRequest(null);",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{bearer}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "username",
+							"value": "matijal",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "m",
+							"type": "text"
+						},
+						{
+							"key": "grant_type",
+							"value": "password",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "idms",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{url}}/auth/realms/idms/protocol/openid-connect/token",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"auth",
+						"realms",
+						"idms",
+						"protocol",
+						"openid-connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
